@@ -3,8 +3,8 @@
 web development project
 👥 Team Members
 
-    Hariom Patidar
     Abhishek Jadli
+    Hariom Patidar
 
 📄 Abstract
 
