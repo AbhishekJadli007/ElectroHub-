@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Electronics Components Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="login2style.css">
+    <script type="module" src="firebaseauth.js"></script>
+</head>
+<body>
+    <div class="container" id="signup" style="display:none;">
+      <div class="circuit-decoration"></div>
+      <h1 class="form-title">Create Account</h1>
+      <form method="post" action="">
+        <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+        <div class="input-group">
+           <i class="fas fa-user"></i>
+           <input type="text" id="fName" placeholder=" " required>
+           <label for="fName">First Name</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="lName" placeholder=" " required>
+            <label for="lName">Last Name</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="rEmail" placeholder=" " required>
+            <label for="rEmail">Email</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="rPassword" placeholder=" " required>
+            <label for="rPassword">Password</label>
+        </div>
+       <button class="btn" id="submitSignUp">
+           <span class="btn-text">Sign Up</span>
+           <span class="btn-icon"><i class="fas fa-microchip"></i></span>
+       </button>
+      </form>
+      <p class="or">or</p>
+      <div class="icons">
+        <a href="https://myaccount.google.com/"><i class="fab fa-google"></i></a>
+        <a href="https://www.facebook.com/login/"><i class="fab fa-facebook"></i></a>
+      </div>
+      <div class="links">
+        <p>Already Have Account?</p>
+        <button id="signInButton">Sign In</button>
+      </div>
+    </div>
+
+    <div class="container" id="signIn">
+        <div class="circuit-decoration"></div>
+        <h1 class="form-title">Welcome Back</h1>
+        <form method="post" action="">
+          <div id="signInMessage" class="messageDiv" style="display:none;"></div>
+          <div class="input-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="email" placeholder=" " required>
+              <label for="email">Email</label>
+          </div>
+          <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="password" placeholder=" " required>
+              <label for="password">Password</label>
+          </div>
+          <p class="recover">
+            <a href="#">Forgot Password?</a>
+          </p>
+         <button class="btn" id="submitSignIn">
+             <span class="btn-text">Sign In</span>
+             <span class="btn-icon"><i class="fas fa-microchip"></i></span>
+         </button>
+        </form>
+        <p class="or">or</p>
+        <div class="icons">
+          <a href="https://myaccount.google.com/"><i class="fab fa-google"></i></a>
+          <a href="https://www.facebook.com/login/"><i class="fab fa-facebook"></i></a>
+        </div>
+        <div class="links">
+          <p>New to ElectroHub?</p>
+          <button id="signUpButton">Create Account</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

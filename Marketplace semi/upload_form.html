@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Upload Equipment</title>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="projectwebd_css.css" as="style">
+    <link rel="preload" href="rental.css" as="style">
+    <link rel="preload" href="cart.css" as="style">
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="projectwebd_css.css">
+    <link rel="stylesheet" href="rental.css">
+    <link rel="stylesheet" href="cart.css">
+    <!-- Add Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Prevent flash of unstyled content -->
+    <style>
+        html { background: #0a192f; }
+        body { visibility: hidden; }
+        .js-loading * { transition: none !important; }
+
+        /* Enhanced Upload Form Styles */
+        .upload-section {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,255,157,0.1) 0%, rgba(0,184,255,0.1) 100%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        .upload-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 25, 47, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 157, 0.1);
+            z-index: -1;
+        }
+
+        .upload-section h2 {
+            color: #00ff9d;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            position: relative;
+        }
+
+        .upload-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff9d, #00b8ff);
+            border-radius: 3px;
+        }
+
+        .upload-form {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ccd6f6;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(0, 255, 157, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ccd6f6;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff9d;
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group .constraint {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #00ff9d, #00b8ff);
+            color: #0a192f;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 157, 0.4);
+        }
+
+        .submit-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 255, 157, 0.2);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error States */
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: #ff4d4d;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Success Animation */
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: successPulse 0.5s ease-in-out;
+        }
+
+        /* Payment Styles */
+        .payment-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 2px solid rgba(0, 255, 157, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .payment-section h3 {
+            color: #00ff9d;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        #card-element {
+            padding: 1rem;
+            border: 2px solid rgba(0, 255, 157, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ccd6f6;
+        }
+
+        #card-errors {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .processing {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .processing::after {
+            content: '...';
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .listing-fee {
+            color: #ccd6f6;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(0, 255, 157, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .listing-fee span {
+            font-weight: 600;
+            color: #00ff9d;
+        }
+    </style>
+</head>
+
+<body class="js-loading">
+    <header>
+        <table>
+            <tr>
+                <td>
+                    <h1>ElectroHub</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>Your One-Stop Shop for Electronics Components</td>
+            </tr>
+        </table>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="projectwebd_home.html#featured"><i class="fas fa-star"></i> Featured Items</a></li>
+            <li><a href="projectwebd_home.html#categories"><i class="fas fa-tags"></i> Categories</a></li>
+            <li><a href="projectwebd_home.html#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="rental.html"><i class="fas fa-microchip"></i> Rent out</a></li>
+            <li><a href="kart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+            <div id="auth-buttons"></div>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="upload-section">
+            <h2>Upload Your Equipment</h2>
+            <form id="uploadForm" class="upload-form">
+                <div class="form-group">
+                    <label for="equipmentName">Equipment Name</label>
+                    <input type="text" id="equipmentName" name="equipmentName" required 
+                           minlength="3" maxlength="50" pattern="[A-Za-z0-9\s\-]+"
+                           title="Only letters, numbers, spaces, and hyphens allowed">
+                    <div class="constraint">3-50 characters, letters, numbers, spaces, and hyphens only</div>
+                    <div class="error-message">Please enter a valid equipment name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="equipmentType">Equipment Type</label>
+                    <select id="equipmentType" name="equipmentType" required>
+                        <option value="">Select Type</option>
+                        <option value="microcontroller">Microcontroller</option>
+                        <option value="sensor">Sensor</option>
+                        <option value="motor">Motor</option>
+                        <option value="power">Power Module</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div class="error-message">Please select an equipment type</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" required
+                              minlength="20" maxlength="500"></textarea>
+                    <div class="constraint">20-500 characters</div>
+                    <div class="error-message">Please provide a detailed description</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="weeklyPrice">Weekly Rental Price (₹)</label>
+                    <input type="number" id="weeklyPrice" name="weeklyPrice" min="0" max="10000" required>
+                    <div class="constraint">Price range: ₹0 - ₹10,000</div>
+                    <div class="error-message">Please enter a valid price</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="condition">Equipment Condition</label>
+                    <select id="condition" name="condition" required>
+                        <option value="">Select Condition</option>
+                        <option value="new">New</option>
+                        <option value="like_new">Like New</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                    </select>
+                    <div class="error-message">Please select the equipment condition</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="availability">Availability Period</label>
+                    <select id="availability" name="availability" required>
+                        <option value="">Select Period</option>
+                        <option value="1">1 Week</option>
+                        <option value="2">2 Weeks</option>
+                        <option value="3">3 Weeks</option>
+                        <option value="4">4 Weeks</option>
+                    </select>
+                    <div class="error-message">Please select availability period</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Equipment Image</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <div class="constraint">Accepted formats: JPG, PNG, GIF (Max size: 5MB)</div>
+                    <div class="error-message">Please upload an image</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" name="additionalInfo" rows="3" maxlength="200"></textarea>
+                    <div class="constraint">Optional, max 200 characters</div>
+                </div>
+
+                <!-- Add Payment Section -->
+                <div class="payment-section">
+                    <div class="listing-fee">
+                        <p>Listing Fee:</p>
+                        <span>₹99</span>
+                    </div>
+                    <h3>Payment Details</h3>
+                    <div id="card-element">
+                        <!-- Stripe Card Element will be inserted here -->
+                    </div>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-upload"></i>
+                    Pay & Submit Equipment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Remove loading class once everything is loaded
+        window.addEventListener('load', function() {
+            document.body.classList.remove('js-loading');
+            document.body.style.visibility = 'visible';
+            createFloatingElements();
+        });
+
+        // Create floating elements
+        function createFloatingElements() {
+            const container = document.querySelector('.upload-section');
+            for (let i = 0; i < 10; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.top = `${Math.random() * 100}%`;
+                element.style.animationDelay = `${Math.random() * 2}s`;
+                container.appendChild(element);
+            }
+        }
+
+        // Form validation
+        const form = document.getElementById('uploadForm');
+        const inputs = form.querySelectorAll('input, textarea, select');
+
+        inputs.forEach(input => {
+            input.addEventListener('input', validateField);
+            input.addEventListener('blur', validateField);
+        });
+
+        function validateField(e) {
+            const field = e.target;
+            const formGroup = field.closest('.form-group');
+            const errorMessage = formGroup.querySelector('.error-message');
+            
+            if (field.validity.valid) {
+                formGroup.classList.remove('error');
+                errorMessage.style.display = 'none';
+            } else {
+                formGroup.classList.add('error');
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Initialize Stripe
+        const stripe = Stripe('pk_test_51R6PRUPsu2A6Vr1zSU2GCJzqdQp0OLZcJgCJj462pMw4AtLCl9yIBeQjU6pYONCHaX9ChbgYbVEjiTOMSbCrRogf00N7POTo40');
+        const elements = stripe.elements();
+
+        // Create card Element
+        const card = elements.create('card', {
+            style: {
+                base: {
+                    color: '#ccd6f6',
+                    fontFamily: 'Arial, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': {
+                        color: '#8892b0'
+                    }
+                },
+                invalid: {
+                    color: '#ff4d4d',
+                    iconColor: '#ff4d4d'
+                }
+            }
+        });
+
+        // Mount the card Element
+        card.mount('#card-element');
+
+        // Handle real-time validation errors
+        card.addEventListener('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate all fields first
+            let isValid = true;
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                if (!input.validity.valid) {
+                    isValid = false;
+                    input.closest('.form-group').classList.add('error');
+                }
+            });
+
+            if (!isValid) {
+                return;
+            }
+
+            // Disable the submit button to prevent double submission
+            const submitButton = form.querySelector('.submit-btn');
+            submitButton.disabled = true;
+            submitButton.classList.add('processing');
+
+            try {
+                // Get the payment intent client secret
+                const response = await fetch('http://localhost:3000/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                
+                // Confirm the payment
+                const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: {
+                            name: document.getElementById('equipmentName').value
+                        }
+                    }
+                });
+
+                if (confirmError) {
+                    throw confirmError;
+                }
+
+                // Payment successful
+                submitButton.classList.add('success-animation');
+                
+                // Get form data
+                const formData = new FormData(form);
+                
+                // Here you would typically send the form data to your server
+                // For now, we'll just simulate success
+                
+                setTimeout(() => {
+                    alert('Equipment submitted successfully!');
+                    form.reset();
+                    card.clear();
+                    window.location.href = 'rental.html';
+                }, 1000);
+
+            } catch (err) {
+                console.error('Error:', err);
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = err.message || 'An error occurred while processing your payment. Please try again.';
+                submitButton.disabled = false;
+                submitButton.classList.remove('processing');
+            }
+        });
+
+        // Smooth page transitions
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.href.includes('#')) return;
+                e.preventDefault();
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 300);
+            });
+        });
+    </script>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0BtBurYBLn74pTdZyCmEXY8GOxAodCy4",
+            authDomain: "fourth-sem-web-1268.firebaseapp.com",
+            databaseURL: "https://fourth-sem-web-1268-default-rtdb.firebaseio.com",
+            projectId: "fourth-sem-web-1268",
+            storageBucket: "fourth-sem-web-1268.appspot.com",
+            messagingSenderId: "306227043140",
+            appId: "1:306227043140:web:ac697e2475f5535692d511",
+            measurementId: "G-QNG0M5095J"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+
+</html> 

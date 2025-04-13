@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00ff9d;
+            --secondary: #00b8ff;
+            --dark: #0a192f;
+            --light: #ccd6f6;
+            --gray: #8892b0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.9) 0%, rgba(10, 25, 47, 0.95) 100%);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        header h1 {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+            font-size: 2rem;
+        }
+        
+        header p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        nav {
+            background: rgba(10, 25, 47, 0.8);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 70px;
+            width: 100%;
+            z-index: 99;
+            border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,255,157,0.05) 0%, rgba(0,184,255,0.05) 100%);
+            z-index: -1;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+            animation: glow 2s infinite alternate;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 157, 0.4);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .about-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,255,157,0.03) 0%, rgba(0,184,255,0.03) 100%);
+            z-index: -1;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: inline-block;
+            position: relative;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .about-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 255, 157, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.1);
+            border-color: rgba(0, 255, 157, 0.3);
+        }
+        
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,255,157,0.03), rgba(0,184,255,0.03));
+            z-index: -1;
+        }
+        
+        .about-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .about-card p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+        
+        .team-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .team-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 255, 157, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.1);
+            border-color: rgba(0, 255, 157, 0.3);
+        }
+        
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-bottom: 1.5rem;
+            filter: grayscale(20%);
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+        
+        .team-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-card p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--gray);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            background: rgba(10, 25, 47, 0.9);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 157, 0.1);
+        }
+        
+        footer p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 157, 0.4);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 157, 0.8), 0 0 30px rgba(0, 255, 157, 0.4);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .animate-delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .animate-delay-3 {
+            animation-delay: 0.6s;
+        }
+        
+        /* Scroll animations */
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    <div class="cart-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price (₹/week)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items"></tbody>
+        </table>
+        <p class="total-price">Total: ₹<span id="total-price">0.00</span></p>
+        <a href="projectwebd_home.html" class="home-btn">🔙 Back to Home</a>
+        <button class="checkout-btn">🛒 Checkout</button>
+    </div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0BtBurYBLn74pTdZyCmEXY8GOxAodCy4",
+            authDomain: "fourth-sem-web-1268.firebaseapp.com",
+            databaseURL: "https://fourth-sem-web-1268-default-rtdb.firebaseio.com",
+            projectId: "fourth-sem-web-1268",
+            storageBucket: "fourth-sem-web-1268.appspot.com",
+            messagingSenderId: "306227043140",
+            appId: "1:306227043140:web:ac697e2475f5535692d511",
+            measurementId: "G-QNG0M5095J"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth();
+
+        // Ensure the user is logged in before accessing the cart
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User logged in:", user.uid);
+                loadCartItems(user.uid);
+            } else {
+                alert("Please log in to view your cart.");
+                window.location.href = "projectwebd_home.html"; // Redirect to home page
+            }
+        });
+
+        function loadCartItems(userId) {
+            const cartRef = ref(db, `cart/${userId}`); // Corrected database path
+            onValue(cartRef, (snapshot) => {
+                const cartItems = document.getElementById("cart-items");
+                const totalPriceElement = document.getElementById("total-price");
+                cartItems.innerHTML = ""; 
+                let totalPrice = 0;
+
+                if (!snapshot.exists()) {
+                    cartItems.innerHTML = "<tr><td colspan='3'>No items in cart.</td></tr>";
+                    totalPriceElement.textContent = "₹0.00";
+                    return;
+                }
+
+                snapshot.forEach(itemSnapshot => {
+                    let item = itemSnapshot.val();
+                    let itemKey = itemSnapshot.key;
+
+                    cartItems.innerHTML += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>₹${item.price}</td>
+                            <td><button class="remove-btn" onclick="removeItem('${userId}', '${itemKey}')">❌ Remove</button></td>
+                        </tr>`;
+                    totalPrice += parseFloat(item.price);
+                });
+
+                totalPriceElement.textContent = `₹${totalPrice.toFixed(2)}`;
+            });
+        }
+
+        window.removeItem = function (userId, itemKey) {
+            const itemRef = ref(db, `cart/${userId}/${itemKey}`);
+            remove(itemRef).then(() => {
+                alert("Item removed from cart!");
+            }).catch(error => {
+                console.error("Error removing item: ", error);
+            });
+        };
+    </script>
+</body>
+</html>

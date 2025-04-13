@@ -1,0 +1,356 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Poppins",sans-serif;
+}
+
+:root {
+    --primary-color: #00ff9d;
+    --secondary-color: #0a192f;
+    --accent-color: #64ffda;
+    --text-color: #8892b0;
+    --bg-color: #0a192f;
+    --card-bg: rgba(10, 25, 47, 0.95);
+}
+
+body{
+    background: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Circuit Pattern Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, var(--bg-color) 21px, transparent 1%) center,
+        linear-gradient(var(--bg-color) 21px, transparent 1%) center,
+        var(--primary-color);
+    background-size: 22px 22px;
+    opacity: 0.1;
+    z-index: -1;
+    animation: circuitMove 20s linear infinite;
+}
+
+@keyframes circuitMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 22px 22px;
+    }
+}
+
+.container{
+    background: var(--card-bg);
+    width:450px;
+    padding:2rem;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(0, 255, 157, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 157, 0.1);
+    transform: translateY(0);
+    transition: all 0.3s ease;
+    animation: containerAppear 0.6s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 157, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: 0.5s;
+}
+
+.container:hover::before {
+    transform: translateX(100%);
+}
+
+@keyframes containerAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+form{
+    margin:0 1.5rem;
+}
+.form-title{
+    font-size:2rem;
+    font-weight:700;
+    text-align:center;
+    padding:1.3rem;
+    margin-bottom:1rem;
+    color: var(--primary-color);
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.form-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--primary-color);
+}
+.input-group{
+    padding:1.5% 0;
+    position:relative;
+    margin-bottom:1.5rem;
+}
+.input-group i{
+    position:absolute;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px var(--primary-color);
+}
+input{
+    color: var(--text-color);
+    width:100%;
+    background-color:transparent;
+    border:none;
+    border-bottom:2px solid rgba(0, 255, 157, 0.2);
+    padding:0.8rem 0 0.8rem 2.5rem;
+    font-size:1rem;
+    transition: all 0.3s ease;
+}
+input:focus{
+    background-color:transparent;
+    outline:none;
+    border-bottom-color: var(--primary-color);
+    box-shadow: 0 1px 0 0 var(--primary-color);
+}
+input::placeholder{
+    color:transparent;
+}
+label{
+    color: var(--text-color);
+    position:absolute;
+    left:2.5rem;
+    top:0.8rem;
+    cursor:text;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+input:focus~label,input:not(:placeholder-shown)~label{
+    transform: translateY(-1.5rem) scale(0.8);
+    color: var(--primary-color);
+    text-shadow: 0 0 5px var(--primary-color);
+}
+.recover{
+    text-align:right;
+    margin:1rem 0;
+}
+.recover a{
+    color: var(--primary-color);
+    text-decoration:none;
+    font-size:0.9rem;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px var(--primary-color);
+}
+.recover a:hover{
+    color: var(--accent-color);
+    text-decoration:underline;
+}
+button{
+    font-size:1.1rem;
+    padding:1rem 0;
+    border-radius:10px;
+    outline:none;
+    border:none;
+    width:100%;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    color: var(--secondary-color);
+    cursor:pointer;
+    transition: all 0.3s ease;
+    font-weight:600;
+    letter-spacing: 0.5px;
+    margin-top:1rem;
+    position: relative;
+    overflow: hidden;
+}
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+button:hover::before {
+    left: 100%;
+}
+button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+}
+button:active{
+    transform: translateY(0);
+}
+.or{
+    font-size:1rem;
+    margin:1.5rem 0;
+    text-align:center;
+    color: var(--text-color);
+    position: relative;
+}
+.or::before,
+.or::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+.or::before {
+    left: 0;
+}
+.or::after {
+    right: 0;
+}
+.icons{
+    text-align:center;
+    margin:1.5rem 0;
+}
+.icons i{
+    color: var(--text-color);
+    padding:1rem;
+    border-radius:50%;
+    font-size:1.5rem;
+    cursor:pointer;
+    border:2px solid rgba(0, 255, 157, 0.2);
+    margin:0 10px;
+    transition: all 0.3s ease;
+    background: var(--card-bg);
+}
+.icons i:hover{
+    transform: translateY(-3px) rotate(360deg);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.2);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+.links{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:1rem;
+    margin-top:1.5rem;
+    color: var(--text-color);
+}
+#signUpButton, #signInButton {
+    color: var(--secondary-color); /* Changed to secondary color for better contrast */
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); /* Added gradient background */
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 255, 157, 0.3); /* Added subtle shadow */
+    text-transform: uppercase; /* Added text transformation */
+    letter-spacing: 0.5px; /* Added letter spacing */
+    position: relative;
+    overflow: hidden; /* For hover effect */
+}
+
+#signUpButton::before, #signInButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+#signUpButton:hover::before, #signInButton:hover::before {
+    left: 100%;
+}
+
+#signUpButton:hover, #signInButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 255, 157, 0.4);
+}
+.messageDiv{
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color:white;
+    padding:1rem;
+    margin:1rem 0;
+    border-radius:10px;
+    font-size:0.9rem;
+    opacity:0;
+    transform: translateY(-10px);
+    animation: messageAppear 0.3s ease forwards, messageFadeOut 0.3s ease 6.7s forwards;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+@keyframes messageAppear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes messageFadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Add smooth transition between sign-in and sign-up forms */
+.container {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+.container.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Add electronic-themed loading animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 255, 157, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 157, 0);
+    }
+}
+
+button.loading {
+    animation: pulse 1.5s infinite;
+} 

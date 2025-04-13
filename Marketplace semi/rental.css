@@ -1,0 +1,396 @@
+:root {
+    --primary-color: #00ff9d;
+    --secondary-color: #0a192f;
+    --accent-color: #64ffda;
+    --text-color: #8892b0;
+    --bg-color: #0a192f;
+    --card-bg: rgba(10, 25, 47, 0.95);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Circuit Pattern Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, var(--bg-color) 21px, transparent 1%) center,
+        linear-gradient(var(--bg-color) 21px, transparent 1%) center,
+        var(--primary-color);
+    background-size: 22px 22px;
+    opacity: 0.1;
+    z-index: -1;
+    animation: circuitMove 20s linear infinite;
+}
+
+@keyframes circuitMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 22px 22px; }
+}
+
+header {
+    background: var(--card-bg);
+    padding: 1rem 2rem;
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+}
+
+header table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header h1 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+}
+
+header td p {
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 1rem auto;
+    display: flex;
+    gap: 1rem;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid rgba(0, 255, 157, 0.2);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+}
+
+.search-container button {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    border: none;
+    border-radius: 10px;
+    color: var(--secondary-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+}
+
+.filters {
+    max-width: 600px;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filters label {
+    color: var(--text-color);
+}
+
+.filters select {
+    padding: 0.5rem 1rem;
+    background: var(--card-bg);
+    border: 2px solid rgba(0, 255, 157, 0.2);
+    border-radius: 5px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filters select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+}
+
+.rental-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.rental-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 255, 157, 0.1);
+    position: relative;
+    overflow: hidden;
+    height: 400px; /* Fixed constant height */
+    display: flex;
+    flex-direction: column;
+}
+
+.rental-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 157, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: 0.5s;
+}
+
+.rental-card:hover::before {
+    transform: translateX(100%);
+}
+
+.rental-card img {
+    width: 100%;
+    height: 180px; /* Fixed image height */
+    object-fit: contain; /* Changed to contain to prevent image distortion */
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.rental-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.rental-card p {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.rental-card .price {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.book-btn {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    color: var(--secondary-color);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin-top: auto;
+}
+
+.book-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.book-btn:hover::before {
+    left: 100%;
+}
+
+.book-btn:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.rental-card[style*="display: none"] {
+    display: none !important;
+}
+
+.rental-card[style*="display: block"] {
+    display: flex !important;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 157, 0.1);
+}
+
+.container h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+}
+
+.container p {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.upload-btn {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    color: var(--secondary-color);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+}
+
+.review {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 255, 157, 0.1);
+    transition: all 0.3s ease;
+}
+
+.review:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.2);
+}
+
+.review p {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Remove old cart button styles */
+.cart-btn {
+    display: none;
+}
+
+/* Ensure cart indicator is properly positioned */
+.cart-indicator {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.cart-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.4);
+}
+
+.cart-icon i {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--error-color);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--secondary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .rental-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+}

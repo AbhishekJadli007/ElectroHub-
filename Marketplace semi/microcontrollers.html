@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Microcontrollers</title>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="projectwebd_css.css" as="style">
+    <link rel="preload" href="category.css" as="style">
+    <link rel="preload" href="cart.css" as="style">
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="projectwebd_css.css">
+    <link rel="stylesheet" href="category.css">
+    <link rel="stylesheet" href="cart.css">
+    <!-- Prevent flash of unstyled content -->
+    <style>
+        html { background: #0a192f; }
+        body { visibility: hidden; }
+        .js-loading * { transition: none !important; }
+        
+        /* Additional styles for consistent card sizing */
+        .category-card {
+            height: 400px !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        .category-card img {
+            height: 180px !important;
+            object-fit: contain !important;
+        }
+        
+        .category-card h3 {
+            font-size: 1.3rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .category-card p {
+            font-size: 0.9rem !important;
+            line-height: 1.4 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .category-card .price {
+            font-size: 1.1rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .add-to-cart-btn {
+            margin-top: auto !important;
+            padding: 0.6rem 1.2rem !important;
+        }
+        
+        /* Remove hover effects that change size */
+        .category-card:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .category-card:hover img {
+            transform: none !important;
+        }
+        
+        /* Search functionality styles */
+        .category-card[style*="display: none"] {
+            display: none !important;
+        }
+        
+        .category-card[style*="display: block"] {
+            display: flex !important;
+        }
+    </style>
+</head>
+
+<body class="js-loading">
+    <header>
+        <table>
+            <tr>
+                <td>
+                    <h1>ElectroHub</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>Your One-Stop Shop for Electronics Components</td>
+            </tr>
+        </table>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="projectwebd_home.html#featured"><i class="fas fa-star"></i> Featured Items</a></li>
+            <li><a href="projectwebd_home.html#categories"><i class="fas fa-tags"></i> Categories</a></li>
+            <li><a href="projectwebd_home.html#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="rental.html"><i class="fas fa-microchip"></i> Rent out</a></li>
+            <li><a href="kart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+            <li class="search-container">
+                <input type="text" id="searchInput" placeholder="Search microcontrollers...">
+                <button><i class="fas fa-search"></i></button>
+            </li>
+            <li><a href="login2.html" class="login-btn"><i class="fas fa-user"></i> Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="filters-container">
+        <div class="filters">
+            <label for="sort">Sort By:</label>
+            <select id="sort">
+                <option>Lowest Price</option>
+                <option>Highest Price</option>
+                <option>Most Popular</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="category-container">
+        <div class="category-card">
+            <img src="aurdiono.png" alt="Arduino Uno">
+            <h3>Arduino Uno</h3>
+            <p>ATmega328P-based microcontroller board</p>
+            <p class="price">₹800</p>
+            <button class="add-to-cart-btn" data-item='{"name": "Arduino Uno", "price": 800, "image": "aurdiono.png", "type": "purchase"}'>
+                <span>Add to Cart</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+
+        <div class="category-card">
+            <img src="ras.jpg" alt="Raspberry Pi 4">
+            <h3>Raspberry Pi 4</h3>
+            <p>Quad-core ARM Cortex-A72 processor</p>
+            <p class="price">₹3500</p>
+            <button class="add-to-cart-btn" data-item='{"name": "Raspberry Pi 4", "price": 3500, "image": "ras.jpg", "type": "purchase"}'>
+                <span>Add to Cart</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+
+        <div class="category-card">
+            <img src="at.jpg" alt="Atmega328P">
+            <h3>Atmega328P</h3>
+            <p>8-bit AVR microcontroller</p>
+            <p class="price">₹400</p>
+            <button class="add-to-cart-btn" data-item='{"name": "Atmega328P", "price": 400, "image": "at.jpg", "type": "purchase"}'>
+                <span>Add to Cart</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+
+        <div class="category-card">
+            <img src="ep.jpg" alt="ESP8266">
+            <h3>ESP8266 WiFi Module</h3>
+            <p>WiFi-enabled microcontroller</p>
+            <p class="price">₹300</p>
+            <button class="add-to-cart-btn" data-item='{"name": "ESP8266 WiFi Module", "price": 300, "image": "ep.jpg", "type": "purchase"}'>
+                <span>Add to Cart</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+
+        <div class="category-card">
+            <img src="STM32F103C8T6.jpg" alt="STM32">
+            <h3>STM32F103C8T6</h3>
+            <p>ARM Cortex-M3 microcontroller</p>
+            <p class="price">₹600</p>
+            <button class="add-to-cart-btn" data-item='{"name": "STM32F103C8T6", "price": 600, "image": "stm32.jpg", "type": "purchase"}'>
+                <span>Add to Cart</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+
+        <div class="category-card">
+            <img src="pic.jpg" alt="PIC16F877A">
+            <h3>PIC16F877A</h3>
+            <p>8-bit RISC microcontroller</p>
+            <p class="price">₹500</p>
+            <button class="add-to-cart-btn" data-item='{"name": "PIC16F877A", "price": 500, "image": "pic.jpg", "type": "purchase"}'>
+                <span>Add to Cart</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Indicator -->
+    <div class="cart-indicator">
+        <div class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </div>
+        <div class="cart-preview">
+            <div class="cart-items">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-amount">₹0</span>
+            </div>
+            <button class="checkout-btn">
+                <i class="fas fa-credit-card"></i>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <script src="cart.js"></script>
+    <script type="module">
+        import("./firebaseauth.js").then(({ checkAuthState }) => {
+            const authContainer = document.getElementById("auth-buttons");
+
+            checkAuthState((isLoggedIn, user) => {
+                if (!isLoggedIn) {
+                    authContainer.innerHTML = `
+                        <li class="login-btn">
+                            <a href="login2.html">
+                                <i class="fas fa-user"></i> Login
+                            </a>
+                        </li>
+                    `;
+                } else {
+                    authContainer.innerHTML = `
+                        <li class="user-info">
+                            <span><i class="fas fa-user-circle"></i> ${user.email}</span>
+                            <button id="logout-btn" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </li>
+                    `;
+
+                    document.getElementById("logout-btn").addEventListener("click", () => {
+                        import("./firebaseauth.js").then(({ getAuth, signOut }) => {
+                            const auth = getAuth();
+                            signOut(auth).then(() => {
+                                location.reload();
+                            }).catch(error => console.error("Logout error:", error));
+                        });
+                    });
+                }
+            });
+        }).catch(error => console.error("Failed to load:", error));
+    </script>
+    <script>
+        // Remove loading class once everything is loaded
+        window.addEventListener('load', function() {
+            document.body.classList.remove('js-loading');
+            document.body.style.visibility = 'visible';
+        });
+
+        // Smooth page transitions
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.href.includes('#')) return; // Skip for anchor links
+                e.preventDefault();
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 300);
+            });
+        });
+
+        // Ensure smooth entrance
+        if (document.readyState === 'complete') {
+            document.body.style.visibility = 'visible';
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.category-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Sort functionality
+        document.getElementById('sort').addEventListener('change', function(e) {
+            const sortBy = e.target.value;
+            const container = document.querySelector('.category-container');
+            const cards = Array.from(document.querySelectorAll('.category-card'));
+            
+            cards.sort((a, b) => {
+                const priceA = parseInt(a.querySelector('.price').textContent.replace('₹', ''));
+                const priceB = parseInt(b.querySelector('.price').textContent.replace('₹', ''));
+                
+                if (sortBy === 'Lowest Price') {
+                    return priceA - priceB;
+                } else if (sortBy === 'Highest Price') {
+                    return priceB - priceA;
+                } else {
+                    return 0;
+                }
+            });
+            
+            cards.forEach(card => container.appendChild(card));
+        });
+    </script>
+</body>
+
+</html> 

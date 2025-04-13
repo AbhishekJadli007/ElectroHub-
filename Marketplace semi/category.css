@@ -1,0 +1,330 @@
+:root {
+    --primary-color: #00ff9d;
+    --secondary-color: #0a192f;
+    --accent-color: #64ffda;
+    --text-color: #8892b0;
+    --bg-color: #0a192f;
+    --card-bg: rgba(10, 25, 47, 0.95);
+    --error-color: #ff4d4d;
+    --success-color: #00ff9d;
+}
+
+/* Preloading styles to prevent white flash */
+html {
+    background: #0a192f;
+}
+
+/* Ensure the dark background is applied immediately */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(45deg, #0a192f, #112240);
+    color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Optimize loading performance */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Smooth page transitions */
+body {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+body.fade-out {
+    opacity: 0;
+}
+
+/* Navigation styles optimization */
+nav {
+    background: rgba(10, 25, 47, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    margin: 0;
+    list-style: none;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+nav a {
+    color: #ccd6f6;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    color: #00ff9d;
+    background: rgba(0, 255, 157, 0.1);
+}
+
+/* Circuit Pattern Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, var(--bg-color) 21px, transparent 1%) center,
+        linear-gradient(var(--bg-color) 21px, transparent 1%) center,
+        var(--primary-color);
+    background-size: 22px 22px;
+    opacity: 0.1;
+    z-index: -1;
+    animation: circuitMove 20s linear infinite;
+}
+
+@keyframes circuitMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 22px 22px; }
+}
+
+header {
+    background: var(--card-bg);
+    padding: 1rem 2rem;
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+}
+
+header table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header h1 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+}
+
+header td p {
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 1rem auto;
+    display: flex;
+    gap: 1rem;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid rgba(0, 255, 157, 0.2);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+}
+
+.search-container button {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    border: none;
+    border-radius: 10px;
+    color: var(--secondary-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+}
+
+.filters-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    margin: 1rem 2rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.filters label {
+    color: #00ff9d;
+    font-weight: 500;
+}
+
+.filters select {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 255, 157, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+}
+
+.filters select:hover {
+    border-color: #00ff9d;
+}
+
+.category-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.category-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 255, 157, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 157, 0.2);
+}
+
+.category-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.category-card h3 {
+    color: #00ff9d;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+}
+
+.category-card p {
+    color: #ccd6f6;
+    margin: 0.5rem 0;
+}
+
+.category-card .price {
+    color: #00ff9d;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.add-to-cart-btn {
+    background: linear-gradient(45deg, #00ff9d, #00b8ff);
+    color: #0a192f;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+}
+
+.add-to-cart-btn i {
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .category-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 1rem;
+    }
+
+    .category-card {
+        padding: 1rem;
+    }
+
+    .category-card img {
+        height: 150px;
+    }
+
+    .filters-container {
+        margin: 1rem;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* Animation for cards */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .category-container {
+        grid-template-columns: 1fr;
+    }
+} 
